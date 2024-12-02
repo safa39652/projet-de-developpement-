@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2 class="mb-4 text-center">Modifier mon Profil</h2>
+        
+        <form action="{{ path('app_front_profile') }}" method="post">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- Nom -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom :</label>
+                        <input type="text" id="name" name="name" value="{{ admin.name }}" class="form-control" required />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email :</label>
+                        <input type="email" id="email" name="email" value="{{ admin.email }}" class="form-control" required />
+                    </div>
+
+                    <!-- Mot de passe -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe :</label>
+                        <input type="password" id="password" name="password" class="form-control" />
+                    </div>
+
+                    <!-- Bouton de mise à jour -->
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Mettre à jour</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Bouton Retour -->
+        <div class="text-center mt-3">
+            <a href="{{ path('app_front_dashboard') }}" class="btn btn-secondary">Retour au Dashboard</a>
+        </div>
+    </div>
+{% endblock %}

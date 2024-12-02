@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Employé{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f8f9fa;">
+    <div class="card shadow-lg" style="width: 50%; border-radius: 10px;">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Ajouter un nouvel Employé</h2>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.nom, 'Nom de l\'Employé', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.poste, 'Poste', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.poste, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le poste'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.statut, 'Statut', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
+                </div>
+                <div class="text-center mt-4">
+                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

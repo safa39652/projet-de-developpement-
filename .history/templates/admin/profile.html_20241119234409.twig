@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<h2>Mon Profil</h2>
+<form action="{{ path('app_front_profile') }}" method="post">
+ 
+  <div>
+    <label for="name">Nom :</label>
+    <input type="text" id="name" name="name" value="{{ admin.name }}" required />
+  </div>
+  <div>
+    <label for="email">Email :</label>
+    <input type="email" id="email" name="email" value="{{ admin.email }}" required />
+  </div>
+  <div>
+    <label for="password">Mot de passe :</label>
+    <input type="password" id="password" name="password" />
+  </div>
+  <button type="submit">Mettre à jour</button>
+</form>
+{% endblock %}

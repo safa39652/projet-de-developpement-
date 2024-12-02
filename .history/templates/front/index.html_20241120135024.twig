@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Employés{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Liste des Employés</h1>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ path('app_employe_add') }}" class="btn btn-primary">Ajouter un Employé</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="bg-primary text-white text-center">
+                <tr>
+                    <th>#</th>
+                    <th>Nom</th>
+                    <th>Poste</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employe in employes %}
+                    <tr class="text-center">
+                        <td>{{ loop.index }}</td>
+                        <td>{{ employe.nom }}</td>
+                        <td>{{ employe.poste }}</td>
+                        <td>
+                            {% if employe.statut == 1 %}
+                                <span class="badge bg-success">Actif</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_employe_view', {id: employe.id}) }}" class="btn btn-sm btn-info text-white">Voir</a>
+                            <a href="{{ path('app_employe_edit', {id: employe.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                            <a href="{{ path('app_employe_delete', {id: employe.id}) }}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?');">
+                               Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Aucun employé trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .btn-sm {
+        font-size: 0.85rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>
+{% endblock %}

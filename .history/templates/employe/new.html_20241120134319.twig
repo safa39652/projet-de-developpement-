@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Employé{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .form-control, .form-select {
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card shadow-lg" style="max-width: 600px; width: 100%;">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Ajouter un nouvel Employé</h2>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.nom, 'Nom de l\'Employé', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom complet'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.poste, 'Poste', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.poste, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le poste'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.statut, 'Statut', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
+                </div>
+                <div class="text-center">
+                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-success btn-lg w-100'}}) }}
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

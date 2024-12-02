@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Employés{% endblock %}
+
+{% block body %}
+    <h1>Liste des Employés</h1>
+ <!-- Lien vers la liste des employés -->
+    <a href="{{ path('new_employe') }}">Ajouter un employée </a>
+
+    <table style="border-collapse: collapse; width: 100%; border: 1px solid black;">
+        <tr style="background-color: gray;">
+            <th style="border: 1px solid black;">Nom</th>
+            <th style="border: 1px solid black;">Poste</th>
+            <th style="border: 1px solid black;">Statut</th>
+            <th style="border: 1px solid black;">Actions</th>
+        </tr>
+        {% for employe in employes %}
+            <tr>
+                <td style="border: 1px solid black;">{{ employe.nom }}</td>
+                <td style="border: 1px solid black;">{{ employe.poste }}</td>
+                <td style="border: 1px solid black;">{{ employe.statut }}</td>
+                <td style="border: 1px solid black;">
+                   <a href="{{ path('employe_show', {'id': employe.id}) }}" class="btn btn-primary btn-sm">Voir</a>
+
+
+                     <a href="{{ path('edit_employe', {'id': employe.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                    <!-- Bouton Supprimer -->
+                    <a href="{{ path('delete_employe', {'id': employe.id}) }}" 
+                       class="btn btn-danger btn-sm" 
+                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')">Supprimer</a>
+                
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

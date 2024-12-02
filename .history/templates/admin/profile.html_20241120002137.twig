@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon Profil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Modifier mon profil</h2>
+    <form action="{{ path('app_front_profile') }}" method="post">
+        <div class="row">
+            <!-- Colonne 1 : Informations personnelles -->
+            <div class="col-md-6">
+                <div class="card p-3">
+                    <h4 class="mb-3">Informations Personnelles</h4>
+                    <div class="form-group mb-3">
+                        <label for="gender" class="form-label">Genre :</label>
+                        <select id="gender" name="gender" class="form-select" required>
+                            <option value="Homme" {% if admin.gender == 'Homme' %}selected{% endif %}>Homme</option>
+                            <option value="Femme" {% if admin.gender == 'Femme' %}selected{% endif %}>Femme</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="name" class="form-label">Nom :</label>
+                        <input type="text" id="name" name="name" value="{{ admin.name }}" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="birthdate" class="form-label">Date de Naissance :</label>
+                        <input type="date" id="birthdate" name="birthdate" value="{{ admin.birthdate|date('Y-m-d') }}" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne 2 : Coordonnées et paramètres -->
+            <div class="col-md-6">
+                <div class="card p-3">
+                    <h4 class="mb-3">Coordonnées et Paramètres</h4>
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">Email :</label>
+                        <input type="email" id="email" name="email" value="{{ admin.email }}" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password" class="form-label">Mot de passe :</label>
+                        <input type="password" id="password" name="password" class="form-control">
+                        <small class="text-muted">Laissez vide pour conserver votre mot de passe actuel.</small>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="country" class="form-label">Pays :</label>
+                        <select id="country" name="country" class="form-select">
+                            <option value="États-Unis" {% if admin.country == 'États-Unis' %}selected{% endif %}>États-Unis</option>
+                            <option value="France" {% if admin.country == 'France' %}selected{% endif %}>France</option>
+                            <option value="Canada" {% if admin.country == 'Canada' %}selected{% endif %}>Canada</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="postal_code" class="form-label">Code Postal :</label>
+                        <input type="text" id="postal_code" name="postal_code" value="{{ admin.postal_code }}" class="form-control">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="language" class="form-label">Langue :</label>
+ 

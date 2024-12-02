@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* General reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body background */
+        body {
+            background: linear-gradient(135deg, #000000, #434343); /* Dark gradient background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        /* Login container */
+        .login-container {
+            background: #1a1a1a; /* Dark gray for container */
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 300px;
+        }
+
+        /* User icon */
+        .user-icon {
+            background: #434343; /* Slightly lighter gray */
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        /* Input fields */
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: none;
+            border-radius: 25px;
+            background: #333333; /* Darker input field background */
+            color: white;
+            outline: none;
+            text-align: center;
+        }
+
+        /* Highlight invalid fields in red */
+        .error-input {
+            border: 2px solid #ff4d4d; /* Red border for input errors */
+        }
+
+        /* Input placeholder text */
+        .login-container input::placeholder {
+            color: #aaaaaa; /* Light gray placeholder text */
+        }
+
+        /* Button */
+        .login-container button {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border: none;
+            border-radius: 25px;
+            background: #000000; /* Black button */
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .login-container button:hover {
+            background: #434343; /* Lighter black on hover */
+        }
+
+        /* Error message */
+        .error-message {
+            color: #ff4d4d; /* Red for error message */
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+     
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 5rem;
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column; /* Align icon and text vertically */
+            align-items: center; /* Center the text and icon */
+        }
+
+        .back-to-home:hover {
+            color: #ff4d4d;
+        }
+
+        .back-to-home-text {
+            font-size: 0.8rem; /* Smaller text size for "Sortir" */
+            margin-top: 0.3rem; /* Space between the icon and text */
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ path('app_home') }}" class="back-to-home">
+        🚶🏽
+        <span class="back-to-home-text">Sortir</span> 
+    </a>
+    
+    <div class="login-container">
+        <div class="user-icon">
+            👦🏻
+        </div>
+        <form id="loginForm" action="{{ path('admin_login') }}" method="post" onsubmit="return validateForm()">
+            
+            
+            <div class="form-group">
+                <input 
+                    type="text" 
+                    name="username" 
+                    id="username" 
+                    placeholder="Username" 
+                    required>
+                <div id="username-error" class="error-message"></div> <!-- Error message will appear here -->
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    placeholder="Password" 
+                    required>
+                <div id="password-error" class="error-message"></div> <!-- Error message will appear here -->
+            </div>
+
+            <button type="submit">SIGN IN</button>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var isValid = true;
+
+            // Réinitialiser les erreurs
+            document.getElementById("username").classList.remove("error-input");
+            document.getElementById("password").classList.remove("error-input");
+            document.getElementById("username-error").textContent = "";
+            document.getElementById("password-error").textContent = "";
+
+            // Définir les valeurs correctes pour le login et le mot de passe
+            var validUsername = "admin";  // Le nom d'utilisateur correct
+            var validPassword = "admin";  // Le mot de passe correct
+
+            // Validation du nom d'utilisateur
+            if (username !== validUsername) {
+                isValid = false;
+                document.getElementById("username").classList.add("error-input");
+                document.getElementById("username-error").textContent = "Nom d'utilisateur incorrect."; // Message d'erreur
+            }
+
+            // Validation du mot de passe
+            if (password !== validPassword) {
+                isValid = false;
+                document.getElementById("password").classList.add("error-input");
+                document.getElementById("password-error").textContent = "Mot de passe incorrect."; // Message d'erreur
+            }
+
+            return isValid; // Si tout est valide, le formulaire est soumis
+        }
+    </script>
+</body>
+</html>
