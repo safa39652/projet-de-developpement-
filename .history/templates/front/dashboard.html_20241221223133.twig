@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des Employés</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #0d7dbe;
+      color: #fff;
+      padding: 10px 20px;
+      text-align: center;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #f4f4f4;
+    }
+
+    button {
+      padding: 8px 12px;
+      background-color: #0d7dbe;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005a8d;
+    }
+
+    #employee-details {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+
+    #camera-feed {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    #close-details {
+      margin-top: 10px;
+      background-color: #d9534f;
+    }
+
+    #close-details:hover {
+      background-color: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gestion des Employés</h1>
+  </header>
+  <main>
+    <!-- Liste des employés -->
+    <section id="employees">
+      <h2>Liste des Employés</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Jean Dupont</td>
+            <td>Développeur</td>
+            <td><button class="view-employee" type="button" data-id="1" data-nom="Jean Dupont" data-poste="Développeur">Voir</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Marie Curie</td>
+            <td>Designer</td>
+            <td><button class="view-employee" type="button" data-id="2" data-nom="Marie Curie" data-poste="Designer">Voir</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Albert Einstein</td>
+            <td>Scientifique</td>
+            <td><button class="view-employee" type="button" data-id="3" data-nom="Albert Einstein" data-poste="Scientifique">Voir</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Détails de l'employé -->
+    <section id="employee-details">
+      <h2>Détails de l'Employé</h2>
+      <div id="employee-info"></div>
+      <video id="camera-feed" autoplay></video>
+      <button id="close-details" type="button">Fermer</button>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const employeeButtons = document.querySelectorAll('.view-employee');
+      const detailsSection = document.getElementById('employee-details');
+      const employeeInfo = document.getElementById('employee-info');
+      const closeDetailsButton = document.getElementById('close-details');
+      const cameraFeed = document.getElementById('camera-feed');
+
+      // Fonction pour ouvrir la caméra
+      async function openCamera() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          cameraFeed.srcObject = stream;
+        } catch (err) {
+          alert('Erreur : Impossible d\'accéder à la caméra.');
+          console.error(err);
+        }
+      }
+
+      // Fonction pour fermer la caméra
+      function closeCamera() {
+        const stream = cameraFeed.srcObject;
+        if (stream) {
+          const tracks = stream.getTracks();
+          tracks.forEach(track => track.stop());
+        }
+        cameraFeed.srcObject = null;
+      }
+
+      // Empêcher tout retour automatique
+      function disableAutoReset() {
+        clearTimeout(window.autoResetTimer); // Efface tout timeout
+        window.autoResetTimer = null; // Supprime le timer
+      }
+
+      // Afficher les détails de l'employé
+      employeeButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+          event.preventDefault(); // Empêche tout comportement par défaut
+          const id = this.dataset.id;
+          const nom = this.dataset.nom;
+          const poste = this.dataset.poste;
+
+          // Mettre à jour les informations de l'employé
+          employeeInfo.innerHTML = `
+            <p><strong>ID :</strong> ${id}</p>
+            <p><strong>Nom :</strong> ${nom}</p>
+            <p><strong>Poste :</strong> ${poste}</p>
+          `;
+
+          // Afficher la section des détails et ouvrir la caméra
+          detailsSection.style.display = 'block';
+          openCamera();
+
+          // Annuler tout timer actif
+          disableAutoReset();
+        });
+      });
+
+      // Fermer les détails de l'employé
+      closeDetailsButton.addEventListener('click', function (event) {
+        event.preventDefault(); // Empêche un comportement non souhaité
+        detailsSection.style.display = 'none';
+        closeCamera();
+      });
+
+      // Optionnel : Ajouter un timer pour revenir (si nécessaire)
+     setTimeout(function() {
+        window.location.href = '/'; // Remplacez '/' par l'URL de votre page d'accueil
+    }, 1000);
+  </script>
+</body>
+</html>

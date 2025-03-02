@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Emotion;
+use App\Entity\Employe;
+use Symfony\Component\Routing\Annotation\Route;
+
+class EmotionController extends AbstractController
+{
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    #[Route('/enregistrer-emotion', name: 'enregistrer_emotion', methods: ['POST'])]
+    public function enregistrerEmotion(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // Validation des données
+        if (!isset($data['emotion']) || empty($data['emotion'])) {
+            return new JsonResponse(['message' => 'L\'émotion est requise'], 400);
+        }
+
+        if (!isset($data['employe']) || empty($data['employe'])) {
+            return new JsonResponse(['message' => 'Le nom de l\'employé est requis'], 400);
+        }
+
+        // Rechercher l'employé par son nom
+        $employeRepository = $this->entityManager->getRepository(Employe::class);
+        $employe = $employeRepository->findOneBy(['nom' => $data['employe']]);
+
+        if (!$employe) {
+            return new JsonResponse(['message' => 'Employé non trouvé'], 404);
+        }
+
+        // Créer une nouvelle entrée dans la table Emotion
+        $emotion = new Emotion();
+        $emotion->setEmotion($data['emotion']);
+        $emotion->setDate(new \DateTime());
+
+        $this->entityManager->persist($emotion);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['message' => 'Emotion enregistrée avec succès']);
+    }
+}

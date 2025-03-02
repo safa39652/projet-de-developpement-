@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport des Employés{% endblock %}
+
+{% block body %}
+    <h1>Rapport des Employés</h1>
+
+    <h2>Liste des Employés</h2>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Poste</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employe in employes %}
+                <tr>
+                    <td>{{ employe.id }}</td>
+                    <td>{{ employe.nom }}</td>
+                    <td>{{ employe.poste }}</td>
+                    <td>{{ employe.statut ? 'Actif' : 'Inactif' }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun employé trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Pointage des Employés</h2>
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Employé</th>
+                <th>Heure d'Entrée</th>
+                <th>Heure de Sortie</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pointage in pointages %}
+                <tr>
+                    <td>{{ pointage.employe }}</td>
+                    <td>{{ pointage.heureEntree|date('H:i') }}</td>
+                    <td>{{ pointage.heureSortie ? pointage.heureSortie|date('H:i') : 'Non définie' }}</td>
+                    <td>{{ pointage.statut }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun pointage enregistré.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

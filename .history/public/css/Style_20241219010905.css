@@ -1,0 +1,233 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #333;
+  background-color: #f4f7fc;
+}
+
+h2 {
+  margin: 20px 0;
+  font-size: 24px;
+  color: #444;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 210px;
+  background-color: #333;
+  color: #fff;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  background-color: #575757;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #7d817d;
+  color: #fff;
+  padding: 10px 20px;
+  margin-left: 260px;
+}
+
+header .admin-profile {
+  display: flex;
+  align-items: center;
+}
+
+header .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+header .sign-out {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 10px;
+  background-color: #0f0f0f;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+header .sign-out:hover {
+  background-color: #e64a19;
+}
+
+/* Main Content */
+main {
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px);
+}
+
+/* Dashboard Cards */
+.cards-container {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  text-align: center;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 24px;
+  color: #4e4d50;
+}
+
+/* Employee Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+table th {
+  background-color: #696969;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Notifications */
+#notifications ul {
+  list-style: none;
+  padding: 0;
+}
+
+#notifications ul li {
+  background-color: #fff8e1;
+  padding: 10px;
+  margin: 10px 0;
+  border-left: 5px solid #ff9800;
+  border-radius: 3px;
+}
+
+
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 20px;
+  margin-top: auto;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  z-index: 1000;
+  width: 400px;
+  display: none;
+}
+
+.modal.visible {
+  display: block;
+}
+
+.modal h2 {
+  margin-top: 0;
+  color: #444;
+}
+
+.modal button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.modal button.close-modal {
+  margin-top: 10px;
+  background-color: #555;
+}
+
+.modal button.close-modal:hover {
+  background-color: #333;
+}
+
+/* Chart Container */
+.chart-container {
+  display: block;
+  box-sizing: border-box;
+  height: 350px; /* Adjusted for better visibility */
+  width: 100%;
+  max-width: 600px; /* Ensuring responsiveness */
+  margin: 0 auto;
+}
+
+.card {
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.card h3 {
+  margin-bottom: 20px;
+}

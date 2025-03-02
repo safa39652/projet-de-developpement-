@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Employés</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .employee-list {
+            margin: 20px;
+        }
+        .employee {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .details-section {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+        .close-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        #camera-feed {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="employee-list">
+    <h1>Liste des Employés</h1>
+    <div class="employee">
+        <span>Employé 1</span>
+        <button class="view-employee" data-id="1">Voir</button>
+    </div>
+    <div class="employee">
+        <span>Employé 2</span>
+        <button class="view-employee" data-id="2">Voir</button>
+    </div>
+    <div class="employee">
+        <span>Employé 3</span>
+        <button class="view-employee" data-id="3">Voir</button>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="details-section" id="employee-details">
+    <h2>Détails de l'Employé</h2>
+    <div id="employee-info"></div>
+    <video id="camera-feed" autoplay></video>
+    <button class="close-button" id="close-details">Fermer</button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const employeeButtons = document.querySelectorAll('.view-employee');
+        const detailsSection = document.getElementById('employee-details');
+        const employeeInfo = document.getElementById('employee-info');
+        const closeDetailsButton = document.getElementById('close-details');
+        const cameraFeed = document.getElementById('camera-feed');
+        const overlay = document.getElementById('overlay');
+
+        // Fonction pour ouvrir la caméra
+        async function openCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                cameraFeed.srcObject = stream;
+            } catch (err) {
+                alert('Erreur : Impossible d\'accéder à la caméra.');
+                console.error(err);
+            }
+        }
+
+        // Fonction pour fermer la caméra
+        function closeCamera() {
+            const stream = cameraFeed.srcObject;
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+            cameraFeed.srcObject = null;
+        }
+
+        // Gérer les clics sur les boutons "Voir"
+        employeeButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const id = this.dataset.id;
+
+                // Requête AJAX pour obtenir les détails de l'employé
+                fetch(`/api/check-employee/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors de la récupération des détails.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.employee) {
+                            // Mettre à jour les informations de l'employé
+                            employeeInfo.innerHTML = `
+                                <p><strong>ID :</strong> ${data.employee.id}</p>
+                                <p><strong>Nom :</strong> ${data.employee.nom}</p>
+                                <p><strong>Poste :</strong> ${data.employee.poste}</p>
+                            `;
+                            // Afficher les détails et l'overlay
+                            detailsSection.style.display = 'block';
+                            overlay.style.display = 'block';
+                            openCamera();
+                        } else {
+                            alert('Employé introuvable.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur AJAX:', error);
+                        alert('Erreur lors de la récupération des détails.');
+                    });
+            });
+        });
+
+        // Fermer la section des détails
+        closeDetailsButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            detailsSection.style.display = 'none';
+            overlay.style.display = 'none';
+            closeCamera();
+        });
+    });
+</script>
+
+</body>
+</html>

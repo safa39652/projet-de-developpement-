@@ -1,0 +1,22 @@
+{# templates/admin/reports/monthly.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport Mensuel{% endblock %}
+
+{% block body %}
+    <h1>Rapport Mensuel</h1>
+    <h2>Employés</h2>
+    <ul>
+        {% for employe in reportData.employes %}
+            <li>{{ employe.nom }} - {{ employe.poste }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Pointages</h2>
+    <ul>
+        {% for pointage in reportData.pointages %}
+            <li>{{ pointage.employe.nom }} - {{ pointage.heureEntree|date('H:i') }} - {{ pointage.heureSortie ? pointage.heureSortie|date('H:i') : 'Non définie' }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

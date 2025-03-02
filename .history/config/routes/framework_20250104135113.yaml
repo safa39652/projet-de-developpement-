@@ -1,0 +1,9 @@
+when@dev:
+    _errors:
+        resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
+        prefix: /_error
+framework:
+    session:
+        enabled: true
+        handler_id: null # ou spécifiez un handler si vous en utilisez un personnalisé
+  

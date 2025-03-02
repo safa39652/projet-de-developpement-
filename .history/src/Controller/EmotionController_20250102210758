@@ -1,0 +1,32 @@
+<?php
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Emotion;
+use Symfony\Component\Routing\Annotation\Route;
+
+class EmotionController extends AbstractController
+{
+    #[Route('/api/save-emotion', name: 'api_save_emotion', methods: ['POST'])]
+    public function saveEmotion(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data || !isset($data['emotion'])) {
+            return new JsonResponse(['message' => 'Données invalides'], 400);
+        }
+
+        $emotion = new Emotion();
+        $emotion->setEmotion($data['emotion']);
+        $emotion->setConfidence($data['confidence']);
+        $emotion->setTimestamp(new \DateTime($data['timestamp']));
+
+        $em->persist($emotion);
+        $em->flush();
+
+        return new JsonResponse(['message' => 'Émotion enregistrée avec succès']);
+    }
+}

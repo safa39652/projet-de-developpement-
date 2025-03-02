@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>4
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
+
+  <style>
+    /* Styles de base */
+    
+
+    .sidebar {
+      width: 200px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: #333;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 20px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #fff;
+      display: block;
+    }
+
+    main {
+      margin-left: 220px;
+      padding: 20px;
+    }
+
+    .admin-profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 150px;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .avatar-container:hover .dropdown-menu {
+      display: block;
+    }
+  /* Styles de base */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #1f1f1f;
+    padding: 20px;
+    color: #e0e0e0;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .sidebar ul li {
+    margin: 20px 0;
+  }
+
+  .sidebar ul li a {
+    text-decoration: none;
+    color: #e0e0e0;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  .sidebar ul li a:hover {
+    background-color: #333333;
+  }
+
+  main {
+    margin-left: 220px;
+    padding: 20px;
+  }
+
+    .cards-container {
+    display: flex;
+    gap: 20px; /* Espacement entre les blocs */
+    justify-content: space-around;
+  }
+
+  .card {
+    flex: 1;
+    background-color: #1f1f1f;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .card h3 {
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    color: #ccc;
+    font-size: 1.5em;
+  }
+
+  .chart-container {
+    background-color: #1f1f1f;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Calendrier */
+  #calendar {
+    margin: 20px auto;
+    max-width: 900px;
+    background-color: #1f1f1f;
+    border: 1px solid #333333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+  }
+
+  /* Boutons */
+  button {
+    background-color: #333333;
+    color: #e0e0e0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #555555;
+  }
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tableau de Bord Admin</h1>
+    <div class="admin-profile">
+      <div class="avatar-container">
+        <img src="https://img.icons8.com/color/512w/administrator-male.png" alt="Admin Avatar" class="avatar">
+        <div class="dropdown-menu">
+          <a href="{{ path('app_front_profile') }}">Voir Profil</a>
+          <a href="{{ path('app_home') }}">Se Déconnecter</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul>
+      <li><a href="#dashboard">Tableau de Bord</a></li>
+      <li><a href="{{ path('employe_list') }}">Employés</a></li>
+      <li><a href="#attendance">Pointage</a></li>
+      <li><a href="{{ path('rapport_presence') }}">Rapports</a></li>
+      <li><a href="#notifications">Notifications</a></li>
+      <li><a href="{{ path('app_front_profile') }}">Profil</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <!-- Dashboard Section -->
+    <section id="dashboard">
+      <h2>Tableau de Bord</h2>
+     <div class="cards-container">
+       <div class="card" style="background-color: #eb64a3">
+        <h3>Nombre d'Employés</h3>
+        <p>{{ employeCount }}</p>
+       </div>
+        <div class="card" style="background-color: #4da134">
+          <h3>Alertes en Attente</h3>
+          <p>{{pendingAlerts}}</p>
+        </div>
+     
+         <div class="card" style="background-color: #4caf50">
+        <h3>Rapports Hebdomadaires</h3>
+        <p>{{ rapportCount }}</p> <!-- Affiche le nombre de rapports hebdomadaires -->
+         </div>
+      </div>
+      <p> charte de présence </p>
+
+      <div class="card">
+      <div class="chart-container">
+        <canvas id="employee-activity-chart"></canvas>
+      </div>
+      </div>
+    </section>
+
+    <!-- Calendrier -->
+   <h1>Calendrier des Événements</h1>
+
+  <!-- Formulaire d'ajout -->
+  <form id="event-form" class="event-form">
+    <input type="text" id="event-title" placeholder="Nom de l'événement" required>
+    <input type="date" id="event-date" required>
+    <input type="time" id="event-time" required>
+    <button type="submit">Ajouter</button>
+  </form>
+
+  <!-- Formulaire de modification -->
+  <form id="edit-form" class="edit-form" style="display: none;">
+    <input type="hidden" id="edit-id">
+    <input type="text" id="edit-title" placeholder="Nouveau nom de l'événement" required>
+    <input type="date" id="edit-date" required>
+    <input type="time" id="edit-time" required>
+    <button type="submit">Modifier</button>
+  </form>
+   <!-- Calendrier -->
+  <div id="calendar"></div>
+</section>
+
+
+    <!-- Gestion des Employés -->
+    <section id="employees">
+      <h2>Gestion des Employés</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for employe in employes %}
+          <tr>
+            <td>{{ employe.id }}</td>
+            <td>{{ employe.nom }}</td>
+            <td>{{ employe.poste }}</td>
+            <td>{{ employe.statut ? 'Actif' : 'Inactif' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+   <!-- Pointage -->
+<section id="attendance">
+  <h2>Pointage des Employés</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Employé</th>
+        <th>Jour</th>
+        <th>Heure d'Entrée</th>
+        <th>Heure de Sortie</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pointage in pointages %}
+      <tr>
+        <td>{{ pointage.employe }}</td>
+        <td>{{ pointage.jour }}</td> <!-- Afficher le jour de la semaine -->
+        <td>{{ pointage.heureEntree|date('H:i') }}</td>
+        <td>{{ pointage.heureSortie ? pointage.heureSortie|date('H:i') : 'Non définie' }}</td>
+        <td>
+          {% set heureEntreeLimite = '08:00' %}
+          {% set heureSortieLimite = '17:00' %}
+          
+          {# Vérification du retard à l'entrée #}
+          {% if pointage.heureEntree|date('H:i') > heureEntreeLimite %}
+            {% set statut = 'Retard' %}
+          {# Vérification de la sortie avant l'heure limite #}
+          {% elseif pointage.heureSortie is not null and pointage.heureSortie|date('H:i') < heureSortieLimite %}
+            {% set statut = 'Sortie avant l\'heure' %}
+          {# Vérification de la présence #}
+          {% elseif pointage.heureEntree|date('H:i') <= heureEntreeLimite and (pointage.heureSortie is null or pointage.heureSortie|date('H:i') >= heureSortieLimite) %}
+            {% set statut = 'Présence' %}
+          {# Si aucune des conditions n'est remplie, statut = Absent #}
+          {% else %}
+            {% set statut = 'Absent' %}
+          {% endif %}
+          
+          {{ statut }} <!-- Afficher le statut -->
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5">Aucun pointage enregistré.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+
+    <!-- Rapport -->
+    <section id="reports">
+      <h2>Rapports</h2>
+      <div class="report-list">
+        <div class="report-card">
+          <p>Rapport complet sur les présences.</p>
+          <form action="{{ path('rapport_presence') }}" method="get">
+            <button type="submit">Voir Rapport</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notifications -->
+    <section id="notifications">
+      <h2>Notifications</h2>
+      <ul>
+        <li>Nouvelle alerte : Vérifiez la connexion réseau de l'employé #3.</li>
+        <li>Rappel : Réunion à 10h demain pour toute l'équipe.</li>
+        <li>Erreur système : Problème avec la base de données.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Admin Dashboard. Tous droits réservés.</p>
+  </footer>
+
+  <script>
+    // Graphique d'activité des employés
+    const ctx1 = document.getElementById('employee-activity-chart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
+        datasets: [{
+          label: 'Activité Employés',
+          data: [3, 2, 3, 3, 3],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+        }]
+      }
+    });
+</script>
+<script>
+$(document).ready(function () {
+    let currentEvent = null;
+
+    // Fonction pour défiler jusqu'à un élément
+    function scrollToElement(selector) {
+        $('html, body').animate({
+            scrollTop: $(selector).offset().top
+        }, 500); // 500 ms pour un défilement fluide
+    }
+
+    // Initialisation du calendrier
+    $('#calendar').fullCalendar({
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        editable: true,
+        events: function (start, end, timezone, callback) {
+            // Charger les événements depuis le serveur
+            $.get('/event/list', function (data) {
+                callback(data);
+            });
+        },
+
+        // Gérer le clic sur un événement
+        eventClick: function (event) {
+            currentEvent = event;
+
+            // Remplir le formulaire de modification
+            $('#edit-id').val(event.id);
+            $('#edit-title').val(event.title);
+            $('#edit-date').val(moment(event.start).format('YYYY-MM-DD'));
+            $('#edit-time').val(moment(event.start).format('HH:mm'));
+
+            // Masquer le formulaire d'ajout et afficher le formulaire de modification
+            $('#event-form').hide();
+            $('#edit-form').show();
+
+            // Défilement vers le formulaire de modification
+            scrollToElement('#edit-form');
+        }
+    });
+
+    // Soumission du formulaire d'ajout
+    $('#event-form').on('submit', function (e) {
+        e.preventDefault();
+
+        // Récupérer les valeurs
+        var title = $('#event-title').val();
+        var date = $('#event-date').val();
+        var time = $('#event-time').val();
+
+        // Créer l'objet d'événement
+        var eventData = {
+            title: title,
+            start: date + 'T' + time,
+            end: date + 'T' + time // Assumer que l'événement dure 1 heure par défaut
+        };
+
+        // Envoyer l'événement au serveur
+        $.post('/event/add', eventData, function (response) {
+            if (response.status === 'success') {
+                // Ajouter l'événement au calendrier
+                $('#calendar').fullCalendar('renderEvent', eventData, true);
+
+                // Réinitialiser le formulaire
+                $('#event-form')[0].reset();
+            }
+        });
+    });
+
+    // Soumission du formulaire de modification
+    $('#edit-form').on('submit', function (e) {
+        e.preventDefault();
+
+        if (currentEvent) {
+            // Mise à jour des valeurs
+            currentEvent.title = $('#edit-title').val();
+            currentEvent.start = $('#edit-date').val() + 'T' + $('#edit-time').val();
+
+            // Mettre à jour l'événement dans le calendrier
+            $('#calendar').fullCalendar('updateEvent', currentEvent);
+
+            // Cacher le formulaire de modification et afficher le formulaire d'ajout
+            $('#edit-form').hide();
+            $('#event-form').show();
+            currentEvent = null;
+
+            // Retourner en haut de la page ou vers le formulaire d'ajout
+            scrollToElement('#event-form');
+        }
+    });
+
+    // Réinitialisation du formulaire de modification si nécessaire
+    $('#edit-form').on('reset', function () {
+        $('#edit-form').hide();
+        $('#event-form').show();
+        scrollToElement('#event-form');
+    });
+});
+  </script>
+  <script>
+    var ctx = document.getElementById('employee-activity-chart').getContext('2d');
+    
+    var presenceByDay = {{ presenceByDay|json_encode()|raw }}; // Données passées depuis le contrôleur
+
+    var labels = Object.keys(presenceByDay); // Récupérer les jours (labels)
+    var data = Object.values(presenceByDay); // Récupérer les nombres d'employés présents
+
+    var employeeActivityChart = new Chart(ctx, {
+        type: 'bar', // Type de graphique (barres)
+        data: {
+            labels: labels, // Jours de la semaine
+            datasets: [{
+                label: 'Nombre d\'Employés Présents',
+                data: data, // Nombre d'employés présents pour chaque jour
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Couleur des barres
+                borderColor: 'rgba(75, 192, 192, 1)', // Couleur de la bordure
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+
+
+  
+
+
+
+  
+</body>
+</html>

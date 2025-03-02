@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapports{% endblock %}
+
+{% block stylesheets %}
+<style>
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul li {
+        margin-bottom: 15px;
+    }
+
+    ul li a {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        color: #333;
+        font-size: 18px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    ul li a:hover {
+        background-color: #f0f8ff;
+        color: #0078d7;
+        border-color: #0078d7;
+    }
+
+    ul li a img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+
+    form {
+        margin-bottom: 30px;
+    }
+
+    form label {
+        display: block;
+        margin-top: 10px;
+    }
+
+    form input,
+    form select,
+    form button {
+        margin-top: 5px;
+    }
+
+    form button {
+        margin-top: 15px;
+        padding: 10px 15px;
+        border: none;
+        background-color: #0078d7;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    form button:hover {
+        background-color: #005bb5;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <h1>Générer un Rapport</h1>
+
+    <!-- Formulaire pour choisir le type de rapport -->
+    <form method="post" action="{{ path('rapport_choisir') }}">
+        <label for="report_type">Choisissez le type de rapport :</label>
+        <select name="report_type" id="report_type" required>
+            <option value="presence">Rapport de Présence</option>
+            <option value="event">Rapport des Événements</option>
+        </select>
+
+        <label for="start_date">Date de début :</label>
+        <input type="date" name="start_date" id="start_date" required>
+
+        <label for="end_date">Date de fin :</label>
+        <input type="date" name="end_date" id="end_date" required>
+
+        <button type="submit">Générer le rapport</button>
+    </form>
+
+    <!-- Liens avec icônes -->
+    <ul>
+        <li>
+            <a href="{{ path('rapport_presence') }}">
+                <img src="{{ asset("C:\Users\ASUS\Downloads\rapport logo.png") }}" alt="Présence">
+                Rapport de Présence de toutes les années
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('rapport_evenements') }}">
+                <img src="{{ asset("C:\Users\ASUS\Downloads\rapport logo.png") }}" alt="Événements">
+                Rapport des Événements de toutes les années
+            </a>
+        </li>
+    </ul>
+{% endblock %}

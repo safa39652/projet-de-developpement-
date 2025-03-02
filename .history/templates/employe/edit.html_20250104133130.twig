@@ -1,0 +1,17 @@
+{% block body %}
+    <div class="container mt-5">
+        <h1>Modifier les informations de l'employé</h1>
+
+        {{ form_start(form, {'method': 'POST'}) }}
+        
+        {{ form_row(form.nom) }}
+        {{ form_row(form.poste) }}
+        {{ form_row(form.statut) }}
+
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+        {{ form_end(form) }}
+        
+        <a href="{{ path('employe_list') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+    </div>
+{% endblock %}

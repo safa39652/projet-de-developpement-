@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendrier Persistant</title>
+  
+  <!-- FullCalendar CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css">
+  
+  <!-- jQuery et FullCalendar Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f8f9fa;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .event-form, .edit-form {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .event-form input, .event-form button, 
+    .edit-form input, .edit-form button {
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .event-form button, .edit-form button {
+      background-color: #0d7dbe;
+      color: white;
+      cursor: pointer;
+    }
+
+    #calendar {
+      margin: 20px auto;
+      max-width: 900px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calendrier Persistant</h1>
+
+  <!-- Formulaire d'ajout -->
+  <form id="event-form" class="event-form">
+    <input type="text" id="event-title" placeholder="Nom de l'événement" required>
+    <input type="date" id="event-date" required>
+    <input type="time" id="event-time" required>
+    <button type="submit">Ajouter</button>
+  </form>
+
+  <!-- Formulaire de modification -->
+  <form id="edit-form" class="edit-form" style="display: none;">
+    <input type="hidden" id="edit-id">
+    <input type="text" id="edit-title" placeholder="Nouveau nom de l'événement" required>
+    <input type="date" id="edit-date" required>
+    <input type="time" id="edit-time" required>
+    <button type="submit">Modifier</button>
+  </form>
+
+  <!-- Calendrier -->
+  <div id="calendar"></div>
+
+  <!-- Script FullCalendar -->
+  <script>
+    $(document).ready(function () {
+  $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay'
+    },
+    editable: true,
+    events: '/events/', // Récupération des événements
+
+    // Ajouter un événement
+    dayClick: function (date) {
+      const title = prompt("Entrez le nom de l'événement :");
+      if (title) {
+        $.ajax({
+          url: '/events/add',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({
+            title: title,
+            start: date.format('YYYY-MM-DD HH:mm:ss')
+          }),
+          success: function () {
+            $('#calendar').fullCalendar('refetchEvents');
+          }
+        });
+      }
+    },
+
+    // Modifier un événement
+    eventClick: function (event) {
+      const newTitle = prompt("Modifier le nom de l'événement :", event.title);
+      if (newTitle) {
+        $.ajax({
+          url: `/events/update/${event.id}`,
+          type: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify({
+            title: newTitle,
+            start: event.start.format('YYYY-MM-DD HH:mm:ss'),
+            end: event.end ? event.end.format('YYYY-MM-DD HH:mm:ss') : null
+          }),
+          success: function () {
+            $('#calendar').fullCalendar('refetchEvents');
+          }
+        });
+      }
+    }
+  });
+});
+
+  </script>
+
+</body>
+</html>

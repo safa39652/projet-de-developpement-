@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
+
+  <style>
+    /* Styles de base */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #0d7dbe;
+      color: #fff;
+    }
+
+    .sidebar {
+      width: 200px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: #333;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 20px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #fff;
+      display: block;
+    }
+
+    main {
+      margin-left: 220px;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #calendar {
+      margin: 10px auto;
+      width: 80%;
+    }
+
+    .admin-profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 150px;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .avatar-container:hover .dropdown-menu {
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tableau de Bord Admin</h1>
+    <div class="admin-profile">
+      <div class="avatar-container">
+        <img src="https://img.icons8.com/color/512w/administrator-male.png" alt="Admin Avatar" class="avatar">
+        <div class="dropdown-menu">
+          <a href="{{ path('app_front_profile') }}">Voir Profil</a>
+          <a href="{{ path('app_home') }}">Se Déconnecter</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul>
+      <li><a href="#dashboard">Tableau de Bord</a></li>
+      <li><a href="{{ path('employe_list') }}">Employés</a></li>
+      <li><a href="#attendance">Pointage</a></li>
+      <li><a href="{{ path('rapport_presence') }}">Rapports</a></li>
+      <li><a href="#notifications">Notifications</a></li>
+      <li><a href="{{ path('app_front_profile') }}">Profil</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <!-- Dashboard Section -->
+    <section id="dashboard">
+      <h2>Tableau de Bord</h2>
+      <div class="cards-container">
+        <div class="card" style="background-color: #eb64a3">
+          <h3>Utilisateurs Connectés</h3>
+           <p>3</strong></p>
+
+        </div>
+        <div class="card" style="background-color: #4da134">
+          <h3>Alertes en Attente</h3>
+          <p>3</p>
+        </div>
+        <div class="card" style="background-color: #0d7dbe">
+          <h3>Rapports Hebdomadaires</h3>
+          <p>12</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="chart-container">
+          <canvas id="employee-activity-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calendrier -->
+    <section id="calendar">
+      <h2>Calendrier</h2>
+      <div id="calendar-container"></div>
+    </section>
+
+    <!-- Gestion des Employés -->
+    <section id="employees">
+      <h2>Gestion des Employés</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for employe in employes %}
+          <tr>
+            <td>{{ employe.id }}</td>
+            <td>{{ employe.nom }}</td>
+            <td>{{ employe.poste }}</td>
+            <td>{{ employe.statut ? 'Actif' : 'Inactif' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Pointage -->
+    <section id="attendance">
+      <h2>Pointage des Employés</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Employé</th>
+            <th>Heure d'Entrée</th>
+            <th>Heure de Sortie</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pointage in pointages %}
+          <tr>
+            <td>{{ pointage.employe }}</td>
+            <td>{{ pointage.heureEntree|date('H:i') }}</td>
+            <td>{{ pointage.heureSortie ? pointage.heureSortie|date('H:i') : 'Non définie' }}</td>
+            <td>{{ pointage.statut }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4">Aucun pointage enregistré.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Rapport -->
+    <section id="reports">
+      <h2>Rapports</h2>
+      <div class="report-list">
+        <div class="report-card">
+          <h3>Rapport Hebdomadaire</h3>
+          <p>Rapport complet sur les présences.</p>
+          <form action="{{ path('rapport_presence') }}" method="get">
+            <button type="submit">Voir Rapport</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notifications -->
+    <section id="notifications">
+      <h2>Notifications</h2>
+      <ul>
+        <li>Nouvelle alerte : Vérifiez la connexion réseau de l'employé #3.</li>
+        <li>Rappel : Réunion à 10h demain pour toute l'équipe.</li>
+        <li>Erreur système : Problème avec la base de données.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Admin Dashboard. Tous droits réservés.</p>
+  </footer>
+
+  <script>
+    // Graphique d'activité des employés
+    const ctx1 = document.getElementById('employee-activity-chart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
+        datasets: [{
+          label: 'Activité Employés',
+          data: [12, 19, 3, 5, 2],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+        }]
+      }
+    });
+
+    // Calendrier
+    $(document).ready(function() {
+      $('#calendar-container').fullCalendar({
+        events: [
+          {
+            title: 'Réunion Équipe',
+            start: '2024-12-20'
+          },
+          {
+            title: 'Présentation Client',
+            start: '2024-12-22',
+            end: '2024-12-24'
+          }
+        ]
+      });
+    });
+  </script>
+</body>
+</html>

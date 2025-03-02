@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport des Employés{% endblock %}
+
+{% block body %}
+<h1>Liste des Pointages</h1>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Employé</th>
+            <th>Heure d'entrée</th>
+            <th>Heure de sortie</th>
+            <th>Statut</th>
+            <th>Mois</th>
+            <th>Année</th>
+            <th>Heure</th>
+            <th>Jour</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pointage in pointages %}
+            <tr>
+                <td>{{ pointage.id }}</td>
+                <td>{{ pointage.employe }}</td>
+                <td>{{ pointage.heureEntree|date('Y-m-d H:i:s') }}</td>
+                <td>{{ pointage.heureSortie ? pointage.heureSortie|date('Y-m-d H:i:s') : 'N/A' }}</td>
+                <td>{{ pointage.statut }}</td>
+                <td>{{ pointage.mois }}</td>
+                <td>{{ pointage.annee }}</td>
+                <td>{{ pointage.heure|date('H:i:s') }}</td>
+                <td>{{ pointage.jour }}</td>
+                <img src="{{ pointage.photo }}" alt="Photo de pointage">
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

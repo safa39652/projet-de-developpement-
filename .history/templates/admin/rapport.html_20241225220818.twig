@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapports{% endblock %}
+
+{% block body %}
+    <h1>Générer un Rapport</h1>
+
+    <!-- Formulaire pour choisir le type de rapport -->
+    <form method="post" action="{{ path('rapport_choisir') }}">
+        <label for="report_type">Choisissez le type de rapport :</label>
+        <select name="report_type" id="report_type">
+            <option value="presence">Rapport de Présence</option>
+            <option value="event">Rapport des Événements</option>
+        </select>
+
+        <label for="date_filter">Filtrer par :</label>
+        <select name="date_filter" id="date_filter">
+            <option value="week">Semaine</option>
+            <option value="month">Mois</option>
+            <option value="year">Année</option>
+        </select>
+
+        <label for="start_date">Date de début :</label>
+        <input type="date" name="start_date" id="start_date" required>
+
+        <label for="end_date">Date de fin :</label>
+        <input type="date" name="end_date" id="end_date" required>
+
+        <button type="submit">Générer le rapport</button>
+    </form>
+
+
+
+
+    <ul>
+        <li><a href="{{ path('rapport_presence') }}">Rapport de Présence</a></li>
+        <li><a href="{{ path('rapport_evenements') }}">Rapport des Événements</a></li>
+    </ul>
+{% endblock %}

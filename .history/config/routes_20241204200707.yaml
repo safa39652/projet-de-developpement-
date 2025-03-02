@@ -1,0 +1,10 @@
+controllers:
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+  enregistrer_pointage:
+    path: /enregistrer-pointage
+    controller: App\Controller\PointageController::enregistrerPointage
+    methods: POST
+

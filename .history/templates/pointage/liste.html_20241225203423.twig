@@ -1,0 +1,57 @@
+{# templates/pointage/liste.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport des Employés{% endblock %}
+
+{% block body %}
+<h1>Liste des Pointages</h1>
+<table>
+    <thead>
+       <h2>Pointage des Employés</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Employé</th>
+        <th>Jour</th>
+        <th>Heure d'Entrée</th>
+        <th>Heure de Sortie</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pointage in pointages %}
+      <tr>
+        <td>{{ pointage.employe }}</td>
+        <td>{{ pointage.jour }}</td> <!-- Afficher le jour de la semaine -->
+        <td>{{ pointage.heureEntree|date('H:i') }}</td>
+        <td>{{ pointage.heureSortie ? pointage.heureSortie|date('H:i') : 'Non définie' }}</td>
+        <td>
+          {% set heureEntreeLimite = '08:00' %}
+          {% set heureSortieLimite = '17:00' %}
+          
+          {# Vérification du retard à l'entrée #}
+          {% if pointage.heureEntree|date('H:i') > heureEntreeLimite %}
+            {% set statut = 'Retard' %}
+          {# Vérification de la sortie avant l'heure limite #}
+          {% elseif pointage.heureSortie is not null and pointage.heureSortie|date('H:i') < heureSortieLimite %}
+            {% set statut = 'Sortie avant l\'heure' %}
+          {# Vérification de la présence #}
+          {% elseif pointage.heureEntree|date('H:i') <= heureEntreeLimite and (pointage.heureSortie is null or pointage.heureSortie|date('H:i') >= heureSortieLimite) %}
+            {% set statut = 'Présence' %}
+          {# Si aucune des conditions n'est remplie, statut = Absent #}
+          {% else %}
+            {% set statut = 'Absent' %}
+          {% endif %}
+          
+          {{ statut }} <!-- Afficher le statut -->
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5">Aucun pointage enregistré.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconnaissance Faciale</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        video, canvas, img {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        #result img {
+            max-width: 300px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Reconnaissance Faciale</h1>
+    <video autoplay></video>
+    <canvas id="capture-canvas" style="display:none;"></canvas>
+    <button id="capture">Capturer & Vérifier</button>
+    <div id="result">
+        <h3>Résultat</h3>
+        <img id="captured-image" alt="Image capturée">
+        <div id="employee-info"></div>
+    </div>
+
+    <script>
+        const video = document.querySelector('video');
+        const canvas = document.querySelector('#capture-canvas');
+        const captureButton = document.querySelector('#capture');
+        const resultDiv = document.querySelector('#result');
+        const capturedImage = document.querySelector('#captured-image');
+        const infoElement = document.querySelector('#employee-info');
+
+        // Activer la caméra
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error("Erreur d'accès à la caméra :", error);
+                alert("Impossible d'accéder à la caméra.");
+            });
+
+        // Capturer l'image et l'envoyer à l'API
+        captureButton.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Afficher l'image capturée
+            const dataURL = canvas.toDataURL('image/jpeg');
+            capturedImage.src = dataURL;
+            resultDiv.style.display = 'block';
+
+            // Convertir en Blob et envoyer à l'API
+            const byteString = atob(dataURL.split(',')[1]);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uintArray = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                uintArray[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+
+            const formData = new FormData();
+            formData.append('image', blob, 'captured.jpg');
+
+            // Appeler l'API Flask
+            fetch('/api/check-employee', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.employee) {
+                    infoElement.innerHTML = `
+                        <strong>Nom :</strong> ${data.employee.name}<br>
+                        <strong>ID :</strong> ${data.employee.id}<br>
+                        <strong>Confiance :</strong> ${data.employee.confidence}<br>
+                        <strong>Message :</strong> ${data.employee.message}
+                    `;
+                } else {
+                    infoElement.innerHTML = `<strong>Message :</strong> ${data.message}`;
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'appel API :", error);
+                alert("Erreur lors de l'appel API.");
+            });
+        });
+    </script>
+</body>
+</html>

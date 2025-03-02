@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapports{% endblock %}
+
+{% block body %}
+    <h1>Liste des Rapports</h1>
+    <form method="post" action="{{ path('rapport_presence') }}">
+       
+
+        <label for="start_date">Date de début :</label>
+        <input type="date" name="start_date" id="start_date" required>
+
+        <label for="end_date">Date de fin :</label>
+        <input type="date" name="end_date" id="end_date" required>
+
+        <button type="submit">Générer le rapport</button>
+    </form>
+
+    <ul>
+        <li><a href="{{ path('rapport_presence') }}">Rapport de Présence</a></li>
+        <li><a href="{{ path('rapport_evenements') }}">Rapport des Événements</a></li>
+    </ul>
+{% endblock %}

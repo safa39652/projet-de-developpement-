@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+  /* Tableau en fond blanc avec texte sombre */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff; /* Fond blanc pour le tableau */
+    color: #333; /* Texte sombre pour une bonne lisibilité */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour le tableau */
+  }
+
+  /* Style des en-têtes du tableau */
+  table th {
+    background-color: #f2f2f2; /* Fond léger pour les en-têtes */
+    color: #333; /* Texte sombre pour les en-têtes */
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  /* Style des lignes du tableau */
+  table td {
+    padding: 10px;
+    border-top: 1px solid #ddd; /* Bordure légère entre les lignes */
+  }
+
+  /* Style au survol des lignes du tableau */
+  table tr:hover {
+    background-color: #f9f9f9; /* Survol légèrement plus clair */
+  }
+</style>
+
+  </head>
+<body>
+    <header>
+      <h1>Tableau de Bord Admin</h1>
+      <div class="admin-profile">
+        <div class="avatar-container">
+          <img
+            src="https://img.icons8.com/color/512w/administrator-male.png"
+            alt="Admin Avatar"
+            class="avatar"
+          />
+          <div class="dropdown-menu">
+            <a href="{{ path('app_front_profile') }}">Voir Profil</a>
+            <a href="{{ path('app_home') }}">Se Déconnecter</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside class="sidebar">
+      <ul>
+        <li><a href="{{ path('app_front_dashboard')}}">Tableau de Bord</a></li>
+        <li><a href="{{ path('employe_list')}}">Employés</a></li>
+           <li><a href="{{ path('pointage_page')}}"target="_blank"> Pointage</a></li>
+         <li><a href="{{ path('rapport_page') }}"target="_blank">Rapports</a></li>
+        <li><a href="#notifications">Notifications</a></li>
+        <li><a href="{{ path('app_front_profile') }}">Profil</a></li>
+      </ul>
+    </aside>
+    <main>
+      {% block body %}{% endblock %}
+    </main>
+   
+  </body>
+</html>

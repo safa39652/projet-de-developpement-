@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Employé{% endblock %}
+
+{% block body %}
+    <h1>Détails de l'Employé</h1>
+
+    <table class="table">
+        <tr>
+            <th>Nom</th>
+            <td>{{ employe.nom }}</td>
+        </tr>
+        <tr>
+            <th>Poste</th>
+            <td>{{ employe.poste }}</td>
+        </tr>
+        <tr>
+            <th>Statut</th>
+            <td>{{ employe.statut }}</td>
+        </tr>
+    </table>
+
+    <a href="{{ path('employe_list') }}" class="btn btn-secondary">Retour à la liste</a>
+{% endblock %}

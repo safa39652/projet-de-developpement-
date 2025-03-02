@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #0d7dbe;
+      color: #fff;
+    }
+
+    .sidebar {
+      width: 200px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: #333;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 20px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #fff;
+      display: block;
+    }
+
+    main {
+      margin-left: 220px;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #employee-details {
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    #employee-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 10px 0;
+    }
+
+    #camera-stream {
+      margin: 10px auto;
+      display: none;
+    }
+
+    #employee-data p {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tableau de Bord Admin</h1>
+  </header>
+
+  <aside class="sidebar">
+    <ul>
+      <li><a href="#dashboard">Tableau de Bord</a></li>
+      <li><a href="#employee-details">Détails Employé</a></li>
+    </ul>
+  </aside>
+
+  <main>
+    <section id="dashboard">
+      <h2>Tableau de Bord</h2>
+      <div class="cards-container">
+        <div class="card" style="background-color: #eb64a3">
+          <h3>Utilisateurs Connectés</h3>
+          <p>3</p>
+        </div>
+        <div class="card" style="background-color: #4da134">
+          <h3>Alertes en Attente</h3>
+          <p>3</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="employee-details">
+      <h2>Détails de l'Employé</h2>
+      <div class="employee-info">
+        <img id="employee-photo" src="https://via.placeholder.com/150" alt="Photo de l'employé" class="avatar">
+        <div id="employee-data">
+          <p>Nom : <span id="employee-name">N/A</span></p>
+          <p>Poste : <span id="employee-role">N/A</span></p>
+          <p>Statut : <span id="employee-status">N/A</span></p>
+        </div>
+      </div>
+      <button id="open-camera">Ouvrir la Caméra</button>
+      <video id="camera-stream" autoplay></video>
+      <button id="capture-photo" style="display: none;">Capturer la Photo</button>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const openCameraButton = document.getElementById('open-camera');
+      const cameraStream = document.getElementById('camera-stream');
+      const capturePhotoButton = document.getElementById('capture-photo');
+      const employeePhoto = document.getElementById('employee-photo');
+
+      let stream = null;
+
+      // Ouvrir la caméra
+      openCameraButton.addEventListener('click', async function () {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          cameraStream.srcObject = stream;
+          cameraStream.style.display = 'block';
+          capturePhotoButton.style.display = 'inline-block';
+        } catch (err) {
+          console.error('Erreur lors de l’accès à la caméra:', err);
+        }
+      });
+
+      // Capturer une photo
+      capturePhotoButton.addEventListener('click', function () {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = cameraStream.videoWidth;
+        canvas.height = cameraStream.videoHeight;
+        context.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
+
+        // Afficher la photo capturée
+        employeePhoto.src = canvas.toDataURL('image/png');
+        cameraStream.style.display = 'none';
+        capturePhotoButton.style.display = 'none';
+
+        // Arrêter la caméra
+        stream.getTracks().forEach(track => track.stop());
+      });
+
+      // Exemple de mise à jour des informations de l'employé
+      function updateEmployeeDetails(name, role, status) {
+        document.getElementById('employee-name').textContent = name;
+        document.getElementById('employee-role').textContent = role;
+        document.getElementById('employee-status').textContent = status ? 'Actif' : 'Inactif';
+      }
+
+      // Exemple d'appel de la fonction (données dynamiques à remplacer)
+      updateEmployeeDetails('Jean Dupont', 'Développeur', true);
+    });
+  </script>
+</body>
+</html>

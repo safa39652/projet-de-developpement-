@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport des Employés{% endblock %}
+
+{% block body %}
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapports</title>
+</head>
+<body>
+    <h1>Liste des Rapports</h1>
+    <ul>
+        <li><a href="{{ path('rapport_presence') }}">Rapport de Présence</a></li>
+        <!-- Vous pouvez ajouter d'autres liens ici -->
+    </ul>
+</body>
+</html>
+
+
+{% endblock %}
